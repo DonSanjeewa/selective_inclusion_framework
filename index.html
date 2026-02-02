@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selective Inclusion Theory | Don Sanjeewa Alwis</title>
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="favicon_io/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
+    <link rel="manifest" href="favicon_io/site.webmanifest">
+    <meta name="theme-color" content="#0B1120">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0B1120', // Deepest Slate
+                            card: '#1E293B', // Card BG
+                            accent: '#38BDF8', // Electric Blue
+                        }
+                    },
+                    animation: {
+                        'fade-up': 'fadeUp 1s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0B1120; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        
+        /* Gradient Text Utility */
+        .text-gradient-blue {
+            background: linear-gradient(to right, #60A5FA, #A78BFA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-brand-dark text-slate-300 antialiased selection:bg-brand-accent selection:text-brand-dark overflow-x-hidden">
+
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-900/20 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] bg-indigo-900/10 rounded-full blur-[120px]"></div>
+    </div>
+
+    <nav class="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
+        <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-full px-6 py-3 flex items-center gap-8 shadow-2xl">
+            <span class="font-serif font-bold text-white tracking-wide">DSA.</span>
+            <div class="hidden md:flex gap-6 text-sm font-medium text-slate-400">
+                <a href="#theory" class="hover:text-brand-accent transition-colors duration-300">Theory</a>
+                <a href="#methodology" class="hover:text-brand-accent transition-colors duration-300">Data</a>
+                <a href="#results" class="hover:text-brand-accent transition-colors duration-300">Results</a>
+            </div>
+            <a href="https://zenodo.org/records/18446745" target="_blank" class="bg-white/10 hover:bg-white/20 text-white text-xs px-4 py-2 rounded-full transition-all border border-white/5">
+                PDF v2.0
+            </a>
+        </div>
+    </nav>
+
+    <header class="relative min-h-screen flex flex-col justify-center items-center text-center px-6 pt-20">
+        <div class="animate-fade-up max-w-5xl">
+            <div class="inline-flex items-center gap-2 px-3 py-1 mb-8 text-[10px] font-bold tracking-[0.2em] text-brand-accent uppercase bg-brand-accent/10 rounded border border-brand-accent/20">
+                <span class="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse"></span>
+                Research Preprint
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-serif font-medium mb-8 leading-[1.1] tracking-tight text-white">
+                Selective <span class="text-gradient-blue italic pr-2">Inclusion</span><br>
+                & Colonial Legacies
+            </h1>
+            
+            <p class="text-lg md:text-xl text-slate-400 font-light mb-12 max-w-2xl mx-auto leading-relaxed">
+                Rethinking the settler-extractive distinction. <br class="hidden md:block">
+                Why formal institutions fail to cure inequality when access is restricted.
+            </p>
+
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#theory" class="group relative px-8 py-4 bg-white text-brand-dark font-semibold rounded-lg overflow-hidden transition-transform hover:scale-105">
+                    <span class="relative z-10">Explore the Theory</span>
+                    <div class="absolute inset-0 bg-gradient-to-r from-blue-100 to-indigo-100 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </a>
+                <a href="#results" class="px-8 py-4 bg-transparent border border-white/20 text-white font-medium rounded-lg hover:bg-white/5 transition-colors">
+                    View Findings
+                </a>
+            </div>
+        </div>
+
+        <div class="absolute bottom-10 animate-bounce">
+            <svg class="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+        </div>
+    </header>
+
+    <section class="py-24 relative z-10">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
+                <div class="absolute top-6 left-8 text-8xl font-serif text-white/5 leading-none">“</div>
+                
+                <h2 class="text-xs font-bold text-brand-accent uppercase tracking-widest mb-6 ml-2">Abstract</h2>
+                <div class="space-y-6 text-lg md:text-xl text-slate-300 font-light leading-relaxed">
+                    <p>
+                        The institutional approach to development typically classifies colonial institutions as either <strong class="text-white font-normal">inclusive</strong> or <strong class="text-white font-normal">extractive</strong>. This categorization is based on formal design and often overlooks how rights were distributed <em>within</em> societies.
+                    </p>
+                    <p>
+                        This paper develops the <strong class="text-white font-normal">Selective Inclusion</strong> framework. Using a new <strong class="text-brand-accent font-normal">Partial Access Index (PAI)</strong> for 62 former colonies, the data reveals a <em>Settler Colony Paradox</em>: countries treated as benchmarks of inclusive institutions often exhibited substantial exclusion.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="theory" class="py-32 border-t border-white/5">
+        <div class="max-w-6xl mx-auto px-6 grid lg:grid-cols-2 gap-20 items-center">
+            <div>
+                <h2 class="text-4xl md:text-5xl font-serif text-white mb-8">Beyond the <br>Binary Choice</h2>
+                <div class="space-y-8 text-slate-400 leading-relaxed text-lg">
+                    <p>
+                        Influential theories link institutional development to settlement patterns. Where Europeans settled, they supposedly established "inclusive" institutions. Where they did not, they built "extractive" ones.
+                    </p>
+                    <p>
+                        <strong class="text-white">The Problem:</strong> This view confuses <em>form</em> with <em>access</em>. A country can have a Supreme Court (form) that excludes 80% of the population from using it (access).
+                    </p>
+                    <div class="pl-6 border-l-2 border-brand-accent/50 text-slate-300 italic">
+                        "Formal institutional strength can coexist with restricted access. Who is included matters as much as what institutions exist."
+                    </div>
+                </div>
+            </div>
+            
+            <div class="relative group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                <div class="relative bg-brand-card ring-1 ring-white/10 rounded-xl p-8 shadow-2xl">
+                    <h3 class="text-sm font-bold text-slate-500 uppercase mb-8">Conceptual Framework</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start p-4 rounded-lg hover:bg-white/5 transition duration-300 cursor-default">
+                            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center border border-white/10 font-serif text-slate-400">A</div>
+                            <div class="ml-6">
+                                <h4 class="font-bold text-white text-lg">Institutional Form</h4>
+                                <p class="text-sm text-slate-500 mt-2">Does the constitution exist? Are there courts? (The standard measure).</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start p-4 rounded-lg bg-blue-500/10 border border-blue-500/20 transition duration-300">
+                            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-serif text-white shadow-lg shadow-blue-900/50">B</div>
+                            <div class="ml-6">
+                                <h4 class="font-bold text-blue-400 text-lg">Institutional Access</h4>
+                                <p class="text-sm text-slate-400 mt-2">Can the indigenous majority vote? Can they own titled land? (The new measure).</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="methodology" class="py-32 bg-black/20">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-20">
+                <h2 class="text-3xl md:text-5xl font-serif text-white mb-6">Measuring Reality</h2>
+                <p class="text-slate-400 max-w-xl mx-auto text-lg">
+                    The <span class="text-brand-accent">Partial Access Index (PAI)</span>. <br>
+                    A new historical dataset (N=62) constructed across four critical domains.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="group p-8 bg-white/5 rounded-2xl border border-white/5 hover:border-brand-accent/30 hover:bg-white/10 transition-all duration-300">
+                    <div class="w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">🗳️</div>
+                    <h3 class="font-bold text-white mb-3">Political Franchise</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Was voting restricted to an elite, or was there universal suffrage?</p>
+                </div>
+                <div class="group p-8 bg-white/5 rounded-2xl border border-white/5 hover:border-brand-accent/30 hover:bg-white/10 transition-all duration-300">
+                    <div class="w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">⚖️</div>
+                    <h3 class="font-bold text-white mb-3">Legal Uniformity</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Was there one law for all, or parallel "customary" courts for the poor?</p>
+                </div>
+                <div class="group p-8 bg-white/5 rounded-2xl border border-white/5 hover:border-brand-accent/30 hover:bg-white/10 transition-all duration-300">
+                    <div class="w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">🏛️</div>
+                    <h3 class="font-bold text-white mb-3">Executive Constraints</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Could the population check the leader's power?</p>
+                </div>
+                <div class="group p-8 bg-white/5 rounded-2xl border border-white/5 hover:border-brand-accent/30 hover:bg-white/10 transition-all duration-300">
+                    <div class="w-12 h-12 rounded-lg bg-slate-800 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform">🎓</div>
+                    <h3 class="font-bold text-white mb-3">Economic Access</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">Was education and land ownership accessible to non-elites?</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-32 border-t border-white/5 relative overflow-hidden">
+        <div class="absolute right-0 top-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl -z-10"></div>
+
+        <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-20 items-center">
+            
+            <div class="order-2 md:order-1">
+                 <h2 class="text-3xl md:text-5xl font-serif text-white mb-6">Distinct from <br>"Democracy"</h2>
+                <div class="space-y-6 text-slate-400 leading-relaxed text-lg">
+                    <p>
+                        A common critique is that the Partial Access Index (PAI) is just a proxy for democracy. However, data validation against the <strong class="text-brand-accent">Polity IV</strong> dataset reveals a crucial divergence.
+                    </p>
+                    <p>
+                        The chart reveals the <strong class="text-white">"Settler Paradox"</strong>: nations that score high on standard democracy indices (Institutional Form) but low on actual access.
+                    </p>
+                    <ul class="space-y-3 mt-4">
+                        <li class="flex items-center gap-3">
+                            <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                            <span class="text-sm"><strong>Inclusive:</strong> High Form + High Access</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="w-2 h-2 rounded-full bg-slate-600"></span>
+                            <span class="text-sm"><strong>Extractive:</strong> Low Form + Low Access</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                            <span class="text-sm text-red-200"><strong>The Paradox:</strong> High Form + Restricted Access</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="order-1 md:order-2 bg-slate-900/80 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-white/10 relative overflow-hidden">
+                <div class="mb-8 relative z-10">
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest">The Access Gap</h3>
+                    <p class="text-[10px] text-slate-600 font-mono mt-1">DATA SOURCE: FIGURE G.3 (ALWIS, 2026)</p>
+                </div>
+
+                <div class="relative h-[400px] w-full border-l border-b border-slate-600 ml-2">
+                    
+                    <div class="absolute inset-0 grid grid-cols-4 grid-rows-4 pointer-events-none opacity-20">
+                        <div class="border-b border-r border-slate-400"></div><div class="border-b border-r border-slate-400"></div><div class="border-b border-r border-slate-400"></div><div class="border-b border-slate-400"></div>
+                        <div class="border-b border-r border-slate-400"></div><div class="border-b border-r border-slate-400"></div><div class="border-b border-r border-slate-400"></div><div class="border-b border-slate-400"></div>
+                        <div class="border-b border-r border-slate-400"></div><div class="border-b border-r border-slate-400"></div><div class="border-b border-r border-slate-400"></div><div class="border-b border-slate-400"></div>
+                        <div class="border-r border-slate-400"></div><div class="border-r border-slate-400"></div><div class="border-r border-slate-400"></div><div></div>
+                    </div>
+
+                    <div class="absolute -left-12 top-1/2 -rotate-90 text-[10px] font-bold text-slate-500 tracking-widest text-center w-40 -translate-y-1/2">
+                        INSTITUTIONAL FORM<br><span class="font-normal opacity-70">(Polity IV)</span>
+                    </div>
+                    <div class="absolute -bottom-10 left-1/2 -translate-x-1/2 text-[10px] font-bold text-slate-500 tracking-widest text-center">
+                        INSTITUTIONAL ACCESS<br><span class="font-normal opacity-70">(Partial Access Index)</span>
+                    </div>
+                    
+                    <div class="absolute bottom-4 left-4 w-[95%] h-[95%] border-t-2 border-dashed border-slate-500/30 transform -rotate-[12deg] origin-bottom-left pointer-events-none"></div>
+
+                    <div class="absolute top-[10%] left-[5%] z-0">
+                        <div class="border border-red-500/30 bg-red-900/10 backdrop-blur-sm px-4 py-3 rounded-xl max-w-[180px] shadow-[0_0_30px_rgba(239,68,68,0.1)]">
+                            <h3 class="text-xs text-red-300 font-bold mb-1">The Settler Paradox</h3>
+                            <p class="text-[9px] text-red-200/70 leading-relaxed">
+                                Countries appearing democratic (y-axis) but excluding majorities (x-axis).
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="absolute top-[18%] left-[22%] group z-20">
+                        <div class="w-3 h-3 bg-red-500 rounded-full shadow-[0_0_15px_rgba(239,68,68,0.8)] cursor-pointer hover:scale-125 transition-transform duration-300"></div>
+                        <div class="absolute bottom-5 left-1/2 -translate-x-1/2 w-max opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-slate-800 text-white text-[10px] px-2 py-1 rounded border border-slate-600">
+                            South Africa (1910)
+                        </div>
+                    </div>
+                    <div class="absolute top-[24%] left-[28%] group z-20">
+                        <div class="w-2.5 h-2.5 bg-red-500/60 rounded-full cursor-pointer hover:scale-125 transition-transform hover:bg-red-500"></div>
+                        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 w-max opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-slate-800 text-white text-[10px] px-2 py-1 rounded border border-slate-600">
+                            S. Rhodesia
+                        </div>
+                    </div>
+
+                    <div class="absolute bottom-[15%] left-[12%] group z-20">
+                        <div class="w-2.5 h-2.5 bg-slate-500 rounded-full opacity-60 cursor-pointer hover:scale-125 hover:opacity-100 transition-all"></div>
+                        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 w-max opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-slate-800 text-white text-[10px] px-2 py-1 rounded border border-slate-600">
+                            Belgian Congo
+                        </div>
+                    </div>
+                    
+                    <div class="absolute top-[15%] right-[15%] group z-20">
+                        <div class="w-4 h-4 bg-green-500 rounded-full shadow-[0_0_20px_rgba(34,197,94,0.6)] cursor-pointer hover:scale-110 transition-transform animate-pulse"></div>
+                        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 w-max opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-slate-800 text-white text-[10px] px-2 py-1 rounded border border-slate-600">
+                            New Zealand
+                        </div>
+                    </div>
+                    <div class="absolute top-[20%] right-[8%] group z-20">
+                        <div class="w-2.5 h-2.5 bg-green-500/60 rounded-full cursor-pointer hover:scale-125 hover:bg-green-500 transition-all"></div>
+                         <div class="absolute bottom-5 left-1/2 -translate-x-1/2 w-max opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-slate-800 text-white text-[10px] px-2 py-1 rounded border border-slate-600">
+                            Canada
+                        </div>
+                    </div>
+                    
+                     <div class="absolute top-[40%] left-[45%] group z-20">
+                        <div class="w-2.5 h-2.5 bg-yellow-500/60 rounded-full cursor-pointer hover:scale-125 hover:bg-yellow-500 transition-all"></div>
+                         <div class="absolute bottom-5 left-1/2 -translate-x-1/2 w-max opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-slate-800 text-white text-[10px] px-2 py-1 rounded border border-slate-600">
+                            Peru (Partial)
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="results" class="py-32 bg-gradient-to-b from-brand-card to-brand-dark border-t border-white/5">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="mb-16 text-center">
+                <h2 class="text-3xl md:text-5xl font-serif text-white mb-6">Empirical Findings</h2>
+                <p class="text-slate-400 max-w-2xl mx-auto text-lg">
+                    Higher institutional access at independence is robustly associated with lower long-term income inequality (Gini 1995-2015).
+                </p>
+            </div>
+
+            <div class="bg-slate-900/50 rounded-3xl p-8 md:p-12 border border-white/10 shadow-2xl backdrop-blur-sm">
+                <div class="flex flex-col md:flex-row justify-between md:items-end mb-12">
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-2 md:mb-0">Predicted Income Inequality</h3>
+                    <span class="text-xs text-slate-600 font-mono">SOURCE: TABLE 3, ALWIS (2026)</span>
+                </div>
+                
+                <div class="space-y-10">
+                    <div>
+                        <div class="flex justify-between text-sm mb-3">
+                            <span class="font-bold text-red-400 tracking-wide">Low Access Regimes</span>
+                            <span class="text-white font-mono">45.83</span>
+                        </div>
+                        <div class="w-full bg-slate-800 rounded-full h-2">
+                            <div class="bg-gradient-to-r from-red-600 to-red-400 h-2 rounded-full shadow-[0_0_20px_rgba(248,113,113,0.4)]" style="width: 85%"></div>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-2 font-mono">Highest Inequality (e.g., Sub-Saharan Africa)</p>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-sm mb-3">
+                            <span class="font-bold text-yellow-400 tracking-wide">Medium Access Regimes</span>
+                            <span class="text-white font-mono">44.37</span>
+                        </div>
+                        <div class="w-full bg-slate-800 rounded-full h-2">
+                            <div class="bg-gradient-to-r from-yellow-600 to-yellow-400 h-2 rounded-full shadow-[0_0_20px_rgba(250,204,21,0.4)]" style="width: 80%"></div>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-2 font-mono">Partial Inclusion (e.g., Latin America)</p>
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between text-sm mb-3">
+                            <span class="font-bold text-green-400 tracking-wide">High Access Regimes</span>
+                            <span class="text-white font-mono">41.10</span>
+                        </div>
+                        <div class="w-full bg-slate-800 rounded-full h-2">
+                            <div class="bg-gradient-to-r from-green-600 to-green-400 h-2 rounded-full shadow-[0_0_20px_rgba(74,222,128,0.4)]" style="width: 65%"></div>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-2 font-mono">Lowest Inequality</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6 mt-12">
+                <div class="p-6 rounded-xl border border-white/5 bg-white/[0.02]">
+                    <div class="text-brand-accent mb-4 text-2xl">🛡️</div>
+                    <h4 class="font-bold text-white mb-2 text-sm uppercase tracking-wide">Robustness</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        Results survive "Jackknife" resampling and region-exclusion tests. Patterns are not driven by outliers.
+                    </p>
+                </div>
+                
+                <div class="p-6 rounded-xl border border-white/5 bg-white/[0.02]">
+                    <div class="text-brand-accent mb-4 text-2xl">🌍</div>
+                    <h4 class="font-bold text-white mb-2 text-sm uppercase tracking-wide">Controls</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        The "Low Access" penalty remains significant even when controlling for colonial origin and GDP.
+                    </p>
+                </div>
+
+                <div class="p-6 rounded-xl border border-white/5 bg-white/[0.02]">
+                    <div class="text-brand-accent mb-4 text-2xl">📉</div>
+                    <h4 class="font-bold text-white mb-2 text-sm uppercase tracking-wide">Non-Linearity</h4>
+                    <p class="text-xs text-slate-400 leading-relaxed">
+                        "Partial inclusion" can generate high inequality by empowering elites while excluding the majority.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer id="contact" class="bg-black py-16 border-t border-white/10">
+        <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center opacity-80">
+            <div class="mb-6 md:mb-0">
+                <p class="font-serif font-bold text-white text-xl">Don Sanjeewa Alwis</p>
+                <p class="text-sm text-slate-500 mt-1">Decryptogen, Finland</p>
+            </div>
+            <div class="text-right">
+                <a href="mailto:donsanjeewaalwis@gmail.com" class="text-white hover:text-brand-accent transition-colors text-sm font-medium tracking-wide">donsanjeewaalwis@gmail.com</a>
+                <p class="text-xs text-slate-600 mt-2 font-mono">© 2026 SELECTIVE INCLUSION THEORY</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
