@@ -1,12 +1,13 @@
 // middleware.js
 export function middleware(request) {
-  const url = new URL(request.url);
-  const hostname = url.hostname;
+  // Get the hostname from the request headers (more reliable for Vercel Edge Middleware)
+  const hostname = request.headers.get('host') || '';
   
   // Block access if the request is coming from .vercel.app domain
-  if (hostname.includes('.vercel.app')) {
+  if (hostname && hostname.includes('.vercel.app')) {
     return new Response('Forbidden', {
       status: 403,
+      statusText: 'Forbidden',
       headers: {
         'Content-Type': 'text/plain',
       },
@@ -14,7 +15,6 @@ export function middleware(request) {
   }
   
   // Allow all other requests to proceed
-  return;
 }
 
 // Configure which routes this middleware runs on
