@@ -13,6 +13,8 @@
     <link rel="manifest" href="favicon_io/site.webmanifest">
     <meta name="theme-color" content="#0B1120">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/topojson@3"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -57,6 +59,55 @@
             background: linear-gradient(to right, #60A5FA, #A78BFA);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+        
+        /* Map Specific Styles */
+        .map-container {
+            background: rgba(30, 41, 59, 0.4); /* Slate 800 with opacity */
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .country {
+            stroke: #0B1120; /* Dark stroke to match background */
+            stroke-width: 0.5px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .country:hover {
+            stroke: white;
+            stroke-width: 1.5px;
+            opacity: 1 !important;
+            filter: brightness(1.2);
+        }
+
+        /* Custom Tooltip */
+        .tooltip {
+            position: absolute;
+            background: rgba(15, 23, 42, 0.95); /* Slate 900 */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 16px;
+            border-radius: 8px;
+            pointer-events: none;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            font-family: 'Inter', sans-serif;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 50;
+            min-width: 150px;
+        }
+        
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 5px;
+            border-style: solid;
+            border-color: rgba(15, 23, 42, 0.95) transparent transparent transparent;
         }
     </style>
 </head>
@@ -493,6 +544,44 @@
         </div>
     </section>
 
+    <section class="py-32 border-t border-white/5">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="w-full map-container rounded-3xl p-8 relative">
+                
+                <div class="text-center mb-10">
+                    <div class="inline-block px-3 py-1 mb-4 text-[10px] font-bold tracking-[0.2em] text-blue-400 uppercase bg-blue-500/10 rounded border border-blue-500/20">
+                        Interactive Data
+                    </div>
+                    <h2 class="text-3xl md:text-4xl font-serif text-white mb-2">The Selective Inclusion Map</h2>
+                    <p class="text-sm text-slate-400 font-mono tracking-wide uppercase opacity-70">
+                        [cite_start]Partial Access Index (PAI) at Independence (N=62) [cite: 52]
+                    </p>
+                </div>
+                
+                <div id="map" class="w-full h-[500px] flex items-center justify-center overflow-hidden rounded-xl bg-[#0B1120]/50 border border-white/5"></div>
+
+                <div class="flex flex-wrap justify-center gap-6 mt-8">
+                    <div class="flex items-center gap-3 px-4 py-2 bg-white/5 rounded-full border border-white/5">
+                        <div class="w-3 h-3 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
+                        <span class="text-xs font-medium text-slate-300">High Access (6-8)</span>
+                    </div>
+                    <div class="flex items-center gap-3 px-4 py-2 bg-white/5 rounded-full border border-white/5">
+                        <div class="w-3 h-3 rounded-full bg-yellow-500 shadow-[0_0_10px_rgba(234,179,8,0.5)]"></div>
+                        <span class="text-xs font-medium text-slate-300">Medium Access (3-5)</span>
+                    </div>
+                    <div class="flex items-center gap-3 px-4 py-2 bg-white/5 rounded-full border border-white/5">
+                        <div class="w-3 h-3 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
+                        <span class="text-xs font-medium text-slate-300">Low Access (0-2)</span>
+                    </div>
+                    <div class="flex items-center gap-3 px-4 py-2 bg-white/5 rounded-full border border-white/5">
+                        <div class="w-3 h-3 rounded-full bg-slate-700"></div>
+                        <span class="text-xs font-medium text-slate-500">No Data</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <footer id="contact" class="bg-black py-16 border-t border-white/10">
         <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center opacity-80">
             <div class="mb-6 md:mb-0">
@@ -505,6 +594,150 @@
             </div>
         </div>
     </footer>
+
+<script>
+    // 1. DATASET
+    const dataset = [
+        {"id":"AGO","name":"Angola","value":4,"tier":"Medium Access"},
+        {"id":"ARG","name":"Argentina","value":5,"tier":"Medium Access"},
+        {"id":"AUS","name":"Australia","value":6,"tier":"High Access"},
+        {"id":"BEN","name":"Benin","value":5,"tier":"Medium Access"},
+        {"id":"BFA","name":"Burkina Faso","value":5,"tier":"Medium Access"},
+        {"id":"BGD","name":"Bangladesh","value":6,"tier":"High Access"},
+        {"id":"BOL","name":"Bolivia","value":3,"tier":"Medium Access"},
+        {"id":"BRA","name":"Brazil","value":3,"tier":"Medium Access"},
+        {"id":"BWA","name":"Botswana","value":5,"tier":"Medium Access"},
+        {"id":"CAF","name":"Central African Republic","value":5,"tier":"Medium Access"},
+        {"id":"CAN","name":"Canada","value":6,"tier":"High Access"},
+        {"id":"CHL","name":"Chile","value":4,"tier":"Medium Access"},
+        {"id":"CIV","name":"Côte d'Ivoire","value":5,"tier":"Medium Access"},
+        {"id":"CMR","name":"Cameroon","value":5,"tier":"Medium Access"},
+        {"id":"COG","name":"Republic of the Congo","value":5,"tier":"Medium Access"},
+        {"id":"COL","name":"Colombia","value":4,"tier":"Medium Access"},
+        {"id":"CRI","name":"Costa Rica","value":6,"tier":"High Access"},
+        {"id":"DZA","name":"Algeria","value":4,"tier":"Medium Access"},
+        {"id":"ECU","name":"Ecuador","value":3,"tier":"Medium Access"},
+        {"id":"EGY","name":"Egypt","value":2,"tier":"Low Access"},
+        {"id":"GAB","name":"Gabon","value":5,"tier":"Medium Access"},
+        {"id":"GHA","name":"Ghana","value":6,"tier":"High Access"},
+        {"id":"GIN","name":"Guinea","value":5,"tier":"Medium Access"},
+        {"id":"GMB","name":"The Gambia","value":6,"tier":"High Access"},
+        {"id":"GTM","name":"Guatemala","value":3,"tier":"Medium Access"},
+        {"id":"GUY","name":"Guyana","value":7,"tier":"High Access"},
+        {"id":"HND","name":"Honduras","value":3,"tier":"Medium Access"},
+        {"id":"HTI","name":"Haiti","value":3,"tier":"Medium Access"},
+        {"id":"IDN","name":"Indonesia","value":0,"tier":"Low Access"},
+        {"id":"IND","name":"India","value":4,"tier":"Medium Access"},
+        {"id":"JAM","name":"Jamaica","value":8,"tier":"High Access"},
+        {"id":"KEN","name":"Kenya","value":4,"tier":"Medium Access"},
+        {"id":"LKA","name":"Sri Lanka","value":6,"tier":"High Access"},
+        {"id":"MAR","name":"Morocco","value":1,"tier":"Low Access"},
+        {"id":"MDG","name":"Madagascar","value":5,"tier":"Medium Access"},
+        {"id":"MEX","name":"Mexico","value":4,"tier":"Medium Access"},
+        {"id":"MLI","name":"Mali","value":5,"tier":"Medium Access"},
+        {"id":"MOZ","name":"Mozambique","value":0,"tier":"Low Access"},
+        {"id":"MWI","name":"Malawi","value":5,"tier":"Medium Access"},
+        {"id":"NER","name":"Niger","value":5,"tier":"Medium Access"},
+        {"id":"NGA","name":"Nigeria","value":4,"tier":"Medium Access"},
+        {"id":"NIC","name":"Nicaragua","value":3,"tier":"Medium Access"},
+        {"id":"PAK","name":"Pakistan","value":3,"tier":"Medium Access"},
+        {"id":"PER","name":"Peru","value":3,"tier":"Medium Access"},
+        {"id":"PHL","name":"Philippines","value":5,"tier":"Medium Access"},
+        {"id":"PRY","name":"Paraguay","value":3,"tier":"Medium Access"},
+        {"id":"RWA","name":"Rwanda","value":2,"tier":"Low Access"},
+        {"id":"SDN","name":"Sudan","value":4,"tier":"Medium Access"},
+        {"id":"SEN","name":"Senegal","value":5,"tier":"Medium Access"},
+        {"id":"SLE","name":"Sierra Leone","value":4,"tier":"Medium Access"},
+        {"id":"SLV","name":"El Salvador","value":3,"tier":"Medium Access"},
+        {"id":"TGO","name":"Togo","value":5,"tier":"Medium Access"},
+        {"id":"TUN","name":"Tunisia","value":3,"tier":"Medium Access"},
+        {"id":"TZA","name":"Tanzania","value":5,"tier":"Medium Access"},
+        {"id":"UGA","name":"Uganda","value":4,"tier":"Medium Access"},
+        {"id":"URY","name":"Uruguay","value":6,"tier":"High Access"},
+        {"id":"USA","name":"United States","value":4,"tier":"Medium Access"},
+        {"id":"VEN","name":"Venezuela","value":3,"tier":"Medium Access"},
+        {"id":"VNM","name":"Vietnam","value":2,"tier":"Low Access"},
+        {"id":"ZAF","name":"South Africa","value":3,"tier":"Medium Access"},
+        {"id":"ZMB","name":"Zambia","value":5,"tier":"Medium Access"},
+        {"id":"ZWE","name":"Zimbabwe","value":5,"tier":"Medium Access"}
+    ];
+
+    // Color Logic for Dark Mode
+    const getColor = (value) => {
+        if (value === undefined) return "#334155"; // Slate 700 (No Data)
+        if (value <= 2) return "#ef4444"; // Red 500
+        if (value <= 5) return "#eab308"; // Yellow 500
+        return "#22c55e"; // Green 500
+    };
+
+    // 2. SETUP D3 MAP
+    const width = 960;
+    const height = 450;
+
+    const svg = d3.select("#map")
+        .append("svg")
+        .attr("viewBox", `0 0 ${width} ${height}`)
+        .style("width", "100%")
+        .style("height", "100%");
+
+    // Use GeoMercator but scale/center to avoid huge Antarctica/Greenland
+    const projection = d3.geoMercator()
+        .scale(130)
+        .translate([width / 2, height / 1.5]);
+
+    const tooltip = d3.select("body").append("div").attr("class", "tooltip");
+
+    // Load GeoJSON Data
+    // Using a reliable GeoJSON source for country shapes
+    d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson").then(function(data) {
+        
+        // Map data to geography
+        const dataMap = new Map();
+        dataset.forEach(d => dataMap.set(d.id, d));
+
+        // Draw Map
+        svg.append("g")
+            .selectAll("path")
+            .data(data.features)
+            .join("path")
+            .attr("d", d3.geoPath().projection(projection))
+            .attr("class", "country")
+            .attr("fill", function (d) {
+                const countryData = dataMap.get(d.id);
+                // If data exists, use color. If not, use dark slate (#1e293b is Slate 800)
+                // We use opacity in CSS to make it blend well
+                return countryData ? getColor(countryData.value) : "#1e293b"; 
+            })
+            // Interactive Events
+            .on("mouseover", function(event, d) {
+                const countryData = dataMap.get(d.id);
+                if (countryData) {
+                    // Update Tooltip Content
+                    tooltip.style("opacity", 1)
+                        .html(`
+                            <div class="text-xs text-slate-400 font-bold tracking-widest uppercase mb-1">Country</div>
+                            <h3 class="text-lg font-serif text-white leading-none mb-3">${countryData.name}</h3>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-xs text-slate-400">Score:</span>
+                                <span class="text-sm font-bold text-brand-accent">${countryData.value} / 8</span>
+                            </div>
+                            <div class="text-xs font-mono text-slate-500 uppercase tracking-tight">${countryData.tier}</div>
+                        `)
+                        .style("left", (event.pageX + 15) + "px")
+                        .style("top", (event.pageY - 28) + "px");
+                }
+            })
+            .on("mousemove", function(event) {
+                tooltip
+                    .style("left", (event.pageX + 15) + "px")
+                    .style("top", (event.pageY - 28) + "px");
+            })
+            .on("mouseout", function(d) {
+                tooltip.style("opacity", 0);
+            });
+    });
+
+</script>
 
 </body>
 </html>
